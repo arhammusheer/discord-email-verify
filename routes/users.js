@@ -8,8 +8,17 @@ const bot = new Discord.Client({ autoReconnect: true });
 
 bot.login(process.env.BOT_TOKEN);
 
-bot.once("ready", () => {
+bot.on("ready", () => {
 	console.log("Bot logged in");
+});
+bot.on("disconnect", () => {
+	console.log("Disconnected from Discord server");
+});
+bot.on("reconnecting", () => {
+	console.log("Reconnecting to Discord server");
+});
+bot.on("error", (error) => {
+	console.error("Discord error:", error);
 });
 
 //User homepage
