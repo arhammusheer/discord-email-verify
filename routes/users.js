@@ -4,7 +4,7 @@ var User = require("../models/User");
 var mailer = require("../email");
 const jwt = require("jsonwebtoken");
 const Discord = require("discord.js");
-const bot = new Discord.Client();
+const bot = new Discord.Client({ autoReconnect: true });
 
 bot.login(process.env.BOT_TOKEN);
 
