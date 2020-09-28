@@ -44,7 +44,7 @@ app.use(
 app.use(passport.initialize());
 app.use(passport.session());
 
-var oAuthScopes = ["identify", "email", "guilds", "guilds.join"];
+var oAuthScopes = ["identify", "email"];
 
 var User = require("./models/User");
 
@@ -64,7 +64,6 @@ passport.use(
 					username: profile.username,
 					discriminator: profile.discriminator,
 					email: profile.email,
-					guilds: profile.guilds,
 				},
 				function (err, user) {
 					return cb(err, user);

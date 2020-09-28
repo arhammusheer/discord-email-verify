@@ -7,9 +7,11 @@ var UserSchema = new Schema({
 	discordId: String,
 	username: String,
 	discriminator: String,
-	email: String,
-	umassEmail: String,
-	umassVerified: String,
+	email: { type: String, unique: true },
+	umassEmail: { type: String, unique: true },
+	umassVerified: { type: Boolean, default: false },
+	token: String,
+	tokenDate: Date,
 	guilds: Array,
 });
 
