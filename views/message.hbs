@@ -8,6 +8,9 @@
       <p>
         {{message}}
       </p>
+      {{#if revertLink}}
+      <a href={{revertLink.url}}>{{revertLink.message}}</a>
+      {{/if}}
     </div>
   </div>
 </div>

@@ -1,7 +1,7 @@
 <div class="container mt-4">
   {{#if alert}}
-    <div class="alert alert-danger" role="alert">
-      {{alert}}
+    <div class="alert alert-{{alert.color}}" role="alert">
+      {{alert.message}}
     </div>
   {{/if}}
   <div class="row justify-content-between">

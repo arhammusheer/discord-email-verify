@@ -2,16 +2,22 @@
   href="https://cdn.datatables.net/1.10.22/css/dataTables.bootstrap4.min.css"
   rel="stylesheet"
 />
+
 <div class="container mt-4">
+  {{#if alert}}
+  <div class="alert alert-warning" style="border-radius: 2rem" role="alert">
+    {{alert}}
+  </div>
+  {{/if}}
   <div class="row">
-    <h2 class="font-weight-bold">
+    <h2 class="font-weight-bold p-2">
       Admin console
     </h2>
   </div>
   <div class="row">
     <div class="col-12">
-      <div class="card card-body">
-        <table id="usersTable" width="100%">
+      <div class="card card-body mb-4 table-responsive">
+        <table id="usersTable"width="100%">
         <thead>
           <tr>
             <th>
@@ -33,7 +39,40 @@
         <tbody id="tbody"></tbody>
         </table>
       </div>
-      
+      <div class="card">
+        <div class="card-header border-0">
+          <div class="h4 font-weight-bold">More stuff</div>
+        </div>
+        <div class="card-body">
+          <div class="row">
+            <div class="col-md-6">
+              <div class="mb-2">
+                <h5 class="font-weight-bold">Add new Admin</h5>
+                <form action="/u/admin/add-admin" method="POST" style="width: 100%;">
+                  <div class="input-group mb-3">
+                    <input type="text" class="form-control font-weight-bold" name="discordUsername" placeholder="Discord username" aria-label="Discord username" aria-describedby="button-addon2">
+                    <div class="input-group-append">
+                      <button class="btn btn-primary font-weight-bold" type="submit" id="button-addon2">Add</button>
+                    </div>
+                  </div>
+                </form>
+              </div>
+              <div class="mb-2">
+                <h5 class="font-weight-bold">Remove Admin</h5>
+                <form action="/u/admin/remove-admin" method="POST" style="width: 100%;">
+                  <div class="input-group mb-3">
+                    <input type="text" class="form-control font-weight-bold" name="discordUsername" placeholder="Admin's Discord username" aria-label="Discord username" aria-describedby="button-addon2">
+                    <div class="input-group-append">
+                      <button class="btn btn-danger font-weight-bold" type="submit" id="button-addon2">Remove</button>
+                    </div>
+                  </div>
+                </form>
+              </div>
+            </div>
+            <div class="col-md-6"><div class="h4 text-secondary font-weight-bold">More Features coming...</div></div>
+          </div>
+        </div>
+      </div>
     </div>
   </div>
 </div>

@@ -5,7 +5,7 @@ var mailer = require("../email");
 const jwt = require("jsonwebtoken");
 const { create } = require("hbs");
 
-/* GET users listing. */
+//User homepage
 router.get("/", (req, res, next) => {
 	if (req.user) {
 		res.render("user_index", { User: req.user });
@@ -14,6 +14,7 @@ router.get("/", (req, res, next) => {
 	}
 });
 
+//Admin console
 router.get("/admin", async (req, res, next) => {
 	if (req.user) {
 		if (req.user.isAdmin) {
@@ -22,7 +23,11 @@ router.get("/admin", async (req, res, next) => {
 				userMap = users;
 				return res.render("admin_index", { userMap: JSON.stringify(userMap) });
 			});
-			return res.render("message", {title: "Error occured loading page.", message:"An error might have occured while loading the page. Try refreshing."})
+			return res.render("message", {
+				title: "Error occured loading page.",
+				message:
+					"An error might have occured while loading the page. Try refreshing.",
+			});
 		}
 	}
 	return res.render("error", {
@@ -31,6 +36,7 @@ router.get("/admin", async (req, res, next) => {
 	});
 });
 
+//verification Email send service
 router.get("/send-email", (req, res, next) => {
 	token = jwt.sign({ userid: req.user._id }, process.env.JWT_SECRET, {
 		expiresIn: "1h",
@@ -39,10 +45,12 @@ router.get("/send-email", (req, res, next) => {
 	res.redirect("/u/email-sent");
 });
 
+//Email sent
 router.get("/email-sent", (req, res, next) => {
 	res.render("email_sent");
 });
 
+//Email verification token link handler
 router.get("/verify/:token", async (req, res, next) => {
 	token = req.params.token;
 	data = await jwt.verify(token, process.env.JWT_SECRET);
@@ -68,6 +76,7 @@ router.get("/verify/:token", async (req, res, next) => {
 	}
 });
 
+//Update Email
 router.post("/update-email", async (req, res, next) => {
 	if (req.user) {
 		if (req.body.umassEmail.endsWith("@umass.edu")) {
@@ -87,6 +96,112 @@ router.post("/update-email", async (req, res, next) => {
 	}
 
 	res.redirect("/");
+});
+
+//Add new admin
+router.post("/admin/add-admin", async (req, res, next) => {
+	if (req.user) {
+		if (req.user.isAdmin) {
+			newAdmin = req.body.discordUsername.split("#");
+			username = newAdmin[0];
+			discriminator = newAdmin[1];
+			if (
+				req.user.username == username &&
+				req.user.discriminator == discriminator
+			) {
+				return res.render("message", {
+					title: `You cannot add yourself twice to admins`,
+					message: `YOU ARE ALREADY AN ADMIN....there's not anything above this.`,
+					revertLink: {
+						url: "/u/admin",
+						message: "Go back to admin page",
+					},
+				});
+			}
+			await User.findOneAndUpdate(
+				{
+					username: username,
+					discriminator: discriminator,
+				},
+				{ isAdmin: true },
+				(err, user) => {
+					if (!err)
+						res.render("message", {
+							title: `${username}#${discriminator} is now an admin`,
+							message: `${username}#${discriminator} has now been added to admins and has access to admin console`,
+							revertLink: {
+								url: "/u/admin",
+								message: "Go back to admin page",
+							},
+						});
+				}
+			);
+		} else {
+			res.render("message", {
+				title: `You do not have access permissions to do that.`,
+				message: `Sorry but you do not have permissions to do that. Make sure you are an admin.`,
+				revertLink: {
+					url: "/u",
+					message: "Go back to home page",
+				},
+			});
+		}
+	} else {
+		res.redirect("/");
+	}
+});
+
+//Add new admin
+router.post("/admin/remove-admin", async (req, res, next) => {
+	if (req.user) {
+		if (req.user.isAdmin) {
+			newAdmin = req.body.discordUsername.split("#");
+			username = newAdmin[0];
+			discriminator = newAdmin[1];
+			if (
+				req.user.username == username &&
+				req.user.discriminator == discriminator
+			) {
+				return res.render("message", {
+					title: `You cannot remove your own admin`,
+					message: `Bruh.....Why you wanna remove your own admin. Can't do that.`,
+					revertLink: {
+						url: "/u/admin",
+						message: "Go back to admin page",
+					},
+				});
+			}
+			await User.findOneAndUpdate(
+				{
+					username: username,
+					discriminator: discriminator,
+				},
+				{ isAdmin: false },
+				(err, user) => {
+					if (!err)
+						res.render("message", {
+							title: `${username}#${discriminator} has been removed from admin`,
+							message: `${username}#${discriminator} has now been removed from admins.`,
+							revertLink: {
+								url: "/u/admin",
+								message: "Go back to admin page",
+							},
+						});
+				}
+			);
+		} else {
+			res.render("message", {
+				title: `You do not have access permissions to do that.`,
+				message: `Sorry but you do not have permissions to do that. Make sure you are an admin.`,
+				revertLink: {
+					url: "/u",
+					message: "Go back to home page",
+				},
+			});
+		}
+	} else {
+		res.redirect("/");
+	}
 });
 
 module.exports = router;
