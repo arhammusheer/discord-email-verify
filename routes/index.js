@@ -7,14 +7,14 @@ router.get("/", (req, res, next) => {
 	if (req.user) {
 		return res.redirect("/u");
 	}
-	return res.render("index", { title: "Express" });
+	return res.render("index", { title: "UMass Amherst Public Server" });
 });
 
 router.get("/logout", (req, res, next) => {
 	if (req.user) {
 		req.logout();
-		return res.redirect("/");
-	}
+  }
+  return res.redirect("/");
 });
 
 router.get("/auth/discord", passport.authenticate("discord"));

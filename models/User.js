@@ -5,14 +5,14 @@ var Schema = mongoose.Schema;
 
 var UserSchema = new Schema({
 	discordId: String,
-	username: String,
-	discriminator: String,
-	email: { type: String, unique: true },
-	umassEmail: { type: String, unique: true },
-	umassVerified: { type: Boolean, default: false },
+	username: { type: String, unique: false },
+	discriminator: { type: String, unique: false },
+	email: { type: String, unique: false },
+	umassEmail: { type: String, unique: false, default: null },
+	umassVerified: { type: Boolean, default: false, unique: false },
+	isAdmin: { type: Boolean, default: false },
 	token: String,
 	tokenDate: Date,
-	guilds: Array,
 });
 
 UserSchema.plugin(findOrCreate);
