@@ -1,7 +1,7 @@
 var express = require("express");
 var router = express.Router();
 var User = require("../models/User");
-var mailer = require("../email");
+var mailer = require("../sendgridmail");
 const jwt = require("jsonwebtoken");
 const Discord = require("discord.js");
 const bot = new Discord.Client({ autoReconnect: true });

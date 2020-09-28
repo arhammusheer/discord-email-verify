@@ -69,7 +69,17 @@
                 </form>
               </div>
             </div>
-            <div class="col-md-6"><div class="h4 text-secondary font-weight-bold">More Features coming...</div></div>
+            <div class="col-md-6">
+              <h5 class="font-weight-bold">Manual verification</h5>
+                <form action="/u/admin/manual-auth" method="POST" style="width: 100%;">
+                  <div class="input-group mb-3">
+                    <input type="text" class="form-control font-weight-bold" name="discordUsername" placeholder="Discord username#0000" aria-label="Discord username" aria-describedby="button-addon2">
+                    <div class="input-group-append">
+                      <button class="btn btn-success font-weight-bold" type="submit" id="button-addon2">Verify</button>
+                    </div>
+                  </div>
+                </form>
+            </div>
           </div>
         </div>
       </div>
