@@ -46,18 +46,30 @@ app.use(passport.session());
 
 var oAuthScopes = ["identify", "email", "guilds", "guilds.join"];
 
+var User = require("./models/User");
+
 passport.use(
 	new DiscordStrategy(
 		{
 			clientID: process.env.DISCORD_CLIENT_ID,
 			clientSecret: process.env.DISCORD_CLIENT_SECRET,
-			callbackURL: "callbackURL",
-			scope: scopes,
+			callbackURL: "/auth/discord/callback",
+			scope: oAuthScopes,
 		},
 		function (accessToken, refreshToken, profile, cb) {
-			User.findOrCreate({ discordId: profile.id }, function (err, user) {
-				return cb(err, user);
-			});
+			console.log(profile);
+			User.findOrCreate(
+				{
+					discordId: profile.id,
+					username: profile.username,
+					discriminator: profile.discriminator,
+					email: profile.email,
+					guilds: profile.guilds,
+				},
+				function (err, user) {
+					return cb(err, user);
+				}
+			);
 		}
 	)
 );
