@@ -1,8 +1,8 @@
 <div class="container mt-4">
   {{#if alert}}
-  <div class="alert alert-danger" role="alert">
-    {{alert}}
-  </div>
+    <div class="alert alert-danger" role="alert">
+      {{alert}}
+    </div>
   {{/if}}
   <div class="row justify-content-between">
     <div class="h2 font-weight-bold">
@@ -21,7 +21,7 @@
   </div>
   <div class="row w-100 h-100">
     {{#if User.umassEmail}}
-      {{#if User.umassVerified}}  
+      {{#if User.umassVerified}}
         <div class="row p-4">
           <img src="/images/verified-green.webp" style="height:3rem;" />
           <div class="h2 text-success font-weight-bold">
@@ -33,19 +33,71 @@
         </div>
       {{else}}
         <div class="row p-4">
-          <a href="/u/send-email" class="h4 text-primary">
-            Click here to verify {{User.umassEmail}}
-          </a>
+          <div class="col">
+            <a href="/u/send-email" class="h4 text-primary">
+              Click here to verify
+              {{User.umassEmail}}
+            </a>
+            <br />
+            <a href="#" class="h6 mt-3 text-warning" onclick="this.hidden=true;document.getElementById('updateWrongEmail').hidden=false">
+              Not your email? Click here to re-enter.
+            </a>
+            <form
+              action="/u/update-email"
+              id="updateWrongEmail"
+              method="POST"
+              style="width:100%"
+              hidden
+            >
+              <div class="form-group">
+                <label for="#umassEmailInput">
+                  UMass Email address
+                </label>
+                <input
+                  type="email"
+                  class="form-control form-control-lg font-weight-bold"
+                  placeholder="Enter email ending in @umass.edu"
+                  id="umassEmailInput"
+                  name="umassEmail"
+                  aria-describedby="emailHelp"
+                  style="width: 100%;"
+                  required
+                />
+                <small id="emailHelp" class="form-text text-muted">
+                  We'll never share your email with anyone else.
+                </small>
+                <button type="submit" class="btn btn-primary" id="emailSubmit">
+                  Submit
+                </button>
+              </div>
+            </form>
+          </div>
         </div>
       {{/if}}
     {{else}}
-  <form action="/u/update-email" method="POST">
-    <div class="form-group">
-      <label for="#umassEmailInput">UMass Email address</label>
-      <input type="email" class="form-control" id="umassEmailInput" name="umassEmail" aria-describedby="emailHelp" required>
-      <small id="emailHelp" class="form-text text-muted">We'll never share your email with anyone else.</small>
-      <button type="submit" class="btn btn-primary" id="emailSubmit">Submit</button>
-    </div>
+      <form action="/u/update-email" method="POST" style="width:100%">
+        <div class="form-group">
+          <label for="#umassEmailInput">
+            UMass Email address
+          </label>
+          <input
+            type="email"
+            class="form-control form-control-lg font-weight-bold"
+            placeholder="Enter email ending in @umass.edu"
+            id="umassEmailInput"
+            name="umassEmail"
+            aria-describedby="emailHelp"
+            style="width: 100%;"
+            required
+          />
+          <small id="emailHelp" class="form-text text-muted">
+            We'll never share your email with anyone else.
+          </small>
+          <button type="submit" class="btn btn-primary" id="emailSubmit">
+            Submit
+          </button>
+        </div>
+      </form>
     {{/if}}
   </div>
   {{#if User.isAdmin}}
@@ -57,4 +109,4 @@
       </div>
     </div>
   {{/if}}
-</div>    
+</div>

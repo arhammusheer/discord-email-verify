@@ -10,7 +10,8 @@
   </div>
   <div class="row">
     <div class="col-12">
-      <table id="usersTable" width="100%">
+      <div class="card card-body">
+        <table id="usersTable" width="100%">
         <thead>
           <tr>
             <th>
@@ -30,7 +31,9 @@
           </tr>
         </thead>
         <tbody id="tbody"></tbody>
-      </table>
+        </table>
+      </div>
+      
     </div>
   </div>
 </div>
@@ -43,7 +46,7 @@
     if(tableData[index].umassEmail == null) tableData[index].umassEmail = "Not Specified";
     if(tableData[index].umassVerified == false) tableData[index].umassVerified = `<div class="text-danger">No</div>`
     if(tableData[index].umassVerified == true) tableData[index].umassVerified = `<div class="text-success">Yes</div>`
-    if(tableData[index].isAdmin) tableData[index].isAdmin = `<div class="text-danger font-weight-bold">YES</div>`
+    if(tableData[index].isAdmin) tableData[index].isAdmin = `<div class="text-danger font-weight-bold" onMouseOver="this.innerHTML="Remove Admin"" onMouseOut="this.style.color='green'">YES</div>`
     if(!tableData[index].isAdmin) tableData[index].isAdmin = `<div class="text-primary">No</div>`
     var eachrow = `
   <tr>

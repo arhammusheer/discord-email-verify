@@ -20,8 +20,9 @@ router.get("/admin", async (req, res, next) => {
 			var userMap = [];
 			await User.find({}, (err, users) => {
 				userMap = users;
+				return res.render("admin_index", { userMap: JSON.stringify(userMap) });
 			});
-			return res.render("admin_index", { userMap: JSON.stringify(userMap) });
+			return res.render("message", {title: "Error occured loading page.", message:"An error might have occured while loading the page. Try refreshing."})
 		}
 	}
 	return res.render("error", {
