@@ -6,7 +6,6 @@ var cookieParser = require("cookie-parser");
 var logger = require("morgan");
 var passport = require("passport");
 var DiscordStrategy = require("passport-discord").Strategy;
-var GoogleStrategy = require("passport-google-oauth").OAuth2Strategy;
 var mongoose = require("mongoose");
 var bodyParser = require("body-parser");
 

@@ -9,17 +9,61 @@
     </h2>
   </div>
   <div class="row">
-    <table style="width:100%" id="usersTable"></table>
+    <div class="col-12">
+      <table id="usersTable" width="100%">
+        <thead>
+          <tr>
+            <th>
+              <h5 class="font-weight-bold">
+                discord Username
+              </h5>
+            </th>
+            <th>
+              Umass Email
+            </th>
+            <th>
+              Verified
+            </th>
+            <th>
+              is Admin
+            </th>
+          </tr>
+        </thead>
+        <tbody id="tbody"></tbody>
+      </table>
+    </div>
   </div>
 </div>
 <div id="tableData" hidden>
   {{userMap}}
 </div>
-<script
-  src="https://code.jquery.com/jquery-3.5.1.slim.min.js"
-  integrity="sha384-DfXdz2htPH0lsSSs5nCTpuj/zy4C+OGpamoFVy38MVBnE+IbbVYUew+OrCXaRkfj"
-  crossorigin="anonymous"
-></script>
+<script>
+  tableData = JSON.parse(document.getElementById("tableData").innerHTML)
+  for(index in tableData){
+    if(tableData[index].umassEmail == null) tableData[index].umassEmail = "Not Specified";
+    if(tableData[index].umassVerified == false) tableData[index].umassVerified = `<div class="text-danger">No</div>`
+    if(tableData[index].umassVerified == true) tableData[index].umassVerified = `<div class="text-success">Yes</div>`
+    if(tableData[index].isAdmin) tableData[index].isAdmin = `<div class="text-danger font-weight-bold">YES</div>`
+    if(!tableData[index].isAdmin) tableData[index].isAdmin = `<div class="text-primary">No</div>`
+    var eachrow = `
+  <tr>
+    <td>
+      ${tableData[index].username}#${tableData[index].discriminator}
+    </td>
+    <td>
+      ${tableData[index].umassEmail}
+    </td>
+    <td>
+      ${tableData[index].umassVerified}
+    </td>
+    <td>
+      ${tableData[index].isAdmin}
+    </td>
+  </tr>
+  `;
+    document.getElementById("tbody").innerHTML = document.getElementById("tbody").innerHTML + eachrow  
+    }
+</script>
 <script
   src="https://cdn.datatables.net/1.10.22/js/jquery.dataTables.min.js"
 ></script>
@@ -27,15 +71,7 @@
   src="https://cdn.datatables.net/1.10.22/js/dataTables.bootstrap4.min.js"
 ></script>
 <script>
-  $(document).ready(function() {
-    $('#usersTable').DataTable( {
-        data: JSON.parse(document.getElementById("tableData")),
-        columns: [
-            { title: "Username" },
-            { title: "Umass Email" },
-            { title: "verified" },
-            { title: "Admin" },
-        ]
-    } );
+  $(document).ready( function () {
+    $('#usersTable').DataTable({responsive: true});
 } );
 </script>
