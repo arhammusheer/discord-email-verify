@@ -42,7 +42,7 @@ router.get("/send-email", (req, res, next) => {
 	token = jwt.sign({ userid: req.user._id }, process.env.JWT_SECRET, {
 		expiresIn: "1h",
 	});
-	mailer(req.user.umassEmail, `${req.get("host")}/u/verify/${token}`);
+	mailer(req.user.umassEmail, `${req.get("host")}/u/verify/${token}`, req.user);
 	res.redirect("/u/email-sent");
 });
 
