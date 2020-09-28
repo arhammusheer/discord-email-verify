@@ -1,8 +1,12 @@
 body {
-  padding: 50px;
-  font: 14px "Lucida Grande", Helvetica, Arial, sans-serif;
+	font-family: "Montserrat", sans-serif;
 }
 
 a {
-  color: #00B7FF;
+	color: #00b7ff;
+	text-decoration: none !important;
+}
+
+.card,.card-header,.card-body{
+  border-radius: 2rem !important;
 }

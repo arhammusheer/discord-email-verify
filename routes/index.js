@@ -4,19 +4,17 @@ var passport = require("passport");
 
 /* GET home page. */
 router.get("/", (req, res, next) => {
-    if (req.user) {
-        return res.redirect("/u");
-    }
-    return res.render("index", {
-        title: "Express"
-    });
+	if (req.user) {
+		return res.redirect("/u");
+	}
+	return res.render("index", { title: "UMass Amherst Public Server" });
 });
 
 router.get("/logout", (req, res, next) => {
-    if (req.user) {
-        req.logout();
-        return res.redirect("/");
-    }
+	if (req.user) {
+		req.logout();
+  }
+  return res.redirect("/");
 });
 
 router.get(

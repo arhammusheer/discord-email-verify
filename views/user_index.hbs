@@ -1,0 +1,45 @@
+<div class="container mt-4">
+  <div class="row justify-content-between">
+    <div class="h2 font-weight-bold">
+      Hi
+      {{User.username}}
+    </div>
+    <div>
+      <a
+        href="/logout"
+        class="btn font-weight-bold text-white"
+        style="background-color: #7289da;"
+      >
+        Logout
+      </a>
+    </div>
+  </div>
+  <div class="row w-100 h-100">
+    {{#if User.umassVerified}}
+      <div class="row p-4">
+        <img src="/images/verified-green.webp" style="height:3rem;" />
+        <div class="h2 text-success font-weight-bold">
+          Congratulations, You're verified
+        </div>
+        <p>
+          If you still do not have a verified role, contact a moderator to get it fixed.
+        </p>
+      </div>
+    {{else}}
+      <div class="row p-4">
+        <a href="#" class="h4 text-primary">
+          Click here to verify your UMass email
+        </a>
+      </div>
+    {{/if}}
+  </div>
+  {{#if User.isAdmin}}
+    <div class="row">
+      <div class="row p-4">
+        <a href="/u/admin" class="btn btn-primary">
+          Open Admin console
+        </a>
+      </div>
+    </div>
+  {{/if}}
+</div>
