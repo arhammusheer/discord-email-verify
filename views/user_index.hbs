@@ -1,4 +1,9 @@
 <div class="container mt-4">
+  {{#if alert}}
+  <div class="alert alert-danger" role="alert">
+    {{alert}}
+  </div>
+  {{/if}}
   <div class="row justify-content-between">
     <div class="h2 font-weight-bold">
       Hi
@@ -16,7 +21,7 @@
   </div>
   <div class="row w-100 h-100">
     {{#if User.umassEmail}}
-      {{#if User.umassVerified}}
+      {{#if User.umassVerified}}  
         <div class="row p-4">
           <img src="/images/verified-green.webp" style="height:3rem;" />
           <div class="h2 text-success font-weight-bold">

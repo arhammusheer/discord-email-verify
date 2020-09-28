@@ -3,6 +3,7 @@ var router = express.Router();
 var User = require("../models/User");
 var mailer = require("../email");
 const jwt = require("jsonwebtoken");
+const { create } = require("hbs");
 
 /* GET users listing. */
 router.get("/", (req, res, next) => {
@@ -23,7 +24,10 @@ router.get("/admin", async (req, res, next) => {
 			return res.render("admin_index", { userMap: JSON.stringify(userMap) });
 		}
 	}
-	return res.redirect("/");
+	return res.render("error", {
+		message: "401, Unauthorized Access",
+		error: { status: "You are not authorized to access this page." },
+	});
 });
 
 router.get("/send-email", (req, res, next) => {
@@ -31,7 +35,11 @@ router.get("/send-email", (req, res, next) => {
 		expiresIn: "1h",
 	});
 	mailer(req.user.umassEmail, `${req.get("host")}/u/verify/${token}`);
-	res.send("Sent :)");
+	res.redirect("/u/email-sent");
+});
+
+router.get("/email-sent", (req, res, next) => {
+	res.render("email_sent");
 });
 
 router.get("/verify/:token", async (req, res, next) => {
@@ -40,28 +48,43 @@ router.get("/verify/:token", async (req, res, next) => {
 	userExists = await User.exists({ _id: data.userid });
 	console.log(data);
 	if (userExists) {
-		User.findByIdAndUpdate(data.userid, { umassVerified: true }, function (
-			err,
-			user
-		) {
-			req.user.umassVerified = true;
-			return res.render("verified");
-		});
+		await User.findByIdAndUpdate(
+			data.userid,
+			{ umassVerified: true },
+			function (err, user) {
+				if (err) {
+					return res.render("error", {
+						message: "401, Unauthorized Access",
+						error: { status: "You are not authorized to access this page." },
+					});
+				}
+				if (req.user) req.user.umassVerified = true;
+				return res.render("verified");
+			}
+		);
 	} else {
 		return res.render("not_verified");
 	}
 });
 
 router.post("/update-email", async (req, res, next) => {
-	await User.findByIdAndUpdate(
-		req.user._id,
-		{
-			umassEmail: req.body.umassEmail,
-		},
-		function (err, docs) {
-			if (!err) req.user.umassEmail = req.body.umassEmail;
+	if (req.user) {
+		if (req.body.umassEmail.endsWith("@umass.edu")) {
+			await User.findByIdAndUpdate(
+				req.user._id,
+				{
+					umassEmail: req.body.umassEmail,
+				},
+				function (err, docs) {
+					if (!err) req.user.umassEmail = req.body.umassEmail;
+				}
+			);
+		} else {
+			alertMessage = "The email you have entered isn't affiliated with UMass";
+			return res.render("user_index", { User: req.user, alert: alertMessage });
 		}
-	);
+	}
+
 	res.redirect("/");
 });
 
