@@ -1,6 +1,41 @@
+<link
+  href="https://cdn.datatables.net/1.10.22/css/dataTables.bootstrap4.min.css"
+  rel="stylesheet"
+/>
 <div class="container mt-4">
   <div class="row">
-    <h2 class="font-weight-bold">Admin console</h2>
-    {{{userMap}}}
+    <h2 class="font-weight-bold">
+      Admin console
+    </h2>
+  </div>
+  <div class="row">
+    <table style="width:100%" id="usersTable"></table>
   </div>
 </div>
+<div id="tableData" hidden>
+  {{userMap}}
+</div>
+<script
+  src="https://code.jquery.com/jquery-3.5.1.slim.min.js"
+  integrity="sha384-DfXdz2htPH0lsSSs5nCTpuj/zy4C+OGpamoFVy38MVBnE+IbbVYUew+OrCXaRkfj"
+  crossorigin="anonymous"
+></script>
+<script
+  src="https://cdn.datatables.net/1.10.22/js/jquery.dataTables.min.js"
+></script>
+<script
+  src="https://cdn.datatables.net/1.10.22/js/dataTables.bootstrap4.min.js"
+></script>
+<script>
+  $(document).ready(function() {
+    $('#usersTable').DataTable( {
+        data: JSON.parse(document.getElementById("tableData")),
+        columns: [
+            { title: "Username" },
+            { title: "Umass Email" },
+            { title: "verified" },
+            { title: "Admin" },
+        ]
+    } );
+} );
+</script>
