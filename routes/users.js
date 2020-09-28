@@ -102,7 +102,7 @@ router.post("/update-email", async (req, res, next) => {
 router.post("/admin/add-admin", async (req, res, next) => {
 	if (req.user) {
 		if (req.user.isAdmin) {
-			newAdmin = req.body.discordUsername.split("#");
+			newAdmin = req.body.discordUsername.trim().split("#");
 			username = newAdmin[0];
 			discriminator = newAdmin[1];
 			if (
@@ -155,7 +155,7 @@ router.post("/admin/add-admin", async (req, res, next) => {
 router.post("/admin/remove-admin", async (req, res, next) => {
 	if (req.user) {
 		if (req.user.isAdmin) {
-			newAdmin = req.body.discordUsername.split("#");
+			newAdmin = req.body.discordUsername.trim().split("#");
 			username = newAdmin[0];
 			discriminator = newAdmin[1];
 			if (
