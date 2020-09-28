@@ -37,13 +37,8 @@ router.get("/admin", async (req, res, next) => {
 			var userMap = [];
 			await User.find({}, (err, users) => {
 				userMap = users;
-				return res.render("admin_index", { userMap: JSON.stringify(userMap) });
 			});
-			return res.render("message", {
-				title: "Error occured loading page.",
-				message:
-					"An error might have occured while loading the page. Try refreshing.",
-			});
+			return res.render("admin_index", { userMap: JSON.stringify(userMap) });
 		}
 	} else {
 		return res.render("error", {
@@ -204,6 +199,46 @@ router.post("/admin/remove-admin", async (req, res, next) => {
 								message: "Go back to admin page",
 							},
 						});
+				}
+			);
+		} else {
+			res.render("message", {
+				title: `You do not have access permissions to do that.`,
+				message: `Sorry but you do not have permissions to do that. Make sure you are an admin.`,
+				revertLink: {
+					url: "/u",
+					message: "Go back to home page",
+				},
+			});
+		}
+	} else {
+		res.redirect("/");
+	}
+});
+
+//Verify user manually
+router.post("/admin/manual-auth", async (req, res, next) => {
+	if (req.user) {
+		if (req.user.isAdmin) {
+			user = req.body.discordUsername.trim().split("#");
+			await User.findOneAndUpdate(
+				{
+					username: user[0],
+					discriminator: user[1],
+				},
+				{ umassVerified: true },
+				async (err, user) => {
+					if (!err) {
+						await addVerifiedRole(user.discordId);
+						res.render("message", {
+							title: `${user.username}#${user.discriminator} has been approved`,
+							message: `${user.username}#${user.discriminator} has now been removed from admins.`,
+							revertLink: {
+								url: "/u/admin",
+								message: "Go back to admin page",
+							},
+						});
+					}
 				}
 			);
 		} else {
