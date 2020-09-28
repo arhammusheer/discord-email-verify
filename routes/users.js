@@ -29,11 +29,12 @@ router.get("/admin", async (req, res, next) => {
 					"An error might have occured while loading the page. Try refreshing.",
 			});
 		}
+	} else {
+		return res.render("error", {
+			message: "401, Unauthorized Access",
+			error: { status: "You are not authorized to access this page." },
+		});
 	}
-	return res.render("error", {
-		message: "401, Unauthorized Access",
-		error: { status: "You are not authorized to access this page." },
-	});
 });
 
 //verification Email send service
