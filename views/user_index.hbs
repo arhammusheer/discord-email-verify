@@ -28,7 +28,11 @@
             Congratulations, You're verified
           </div>
           <p>
-            If you still do not have a verified role, contact a moderator to get it fixed.
+            If you still do not have a verified role
+            <a href="/u/assign-role">
+              Click Here
+            </a>
+            , If it still does not work contact a moderator to get it fixed.
           </p>
         </div>
       {{else}}
@@ -39,7 +43,11 @@
               {{User.umassEmail}}
             </a>
             <br />
-            <a href="#" class="h6 mt-3 text-warning" onclick="this.hidden=true;document.getElementById('updateWrongEmail').hidden=false">
+            <a
+              href="#"
+              class="h6 mt-3 text-warning"
+              onclick="this.hidden=true;document.getElementById('updateWrongEmail').hidden=false"
+            >
               Not your email? Click here to re-enter.
             </a>
             <form

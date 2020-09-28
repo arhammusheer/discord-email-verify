@@ -3,7 +3,14 @@ var router = express.Router();
 var User = require("../models/User");
 var mailer = require("../email");
 const jwt = require("jsonwebtoken");
-const { create } = require("hbs");
+const Discord = require("discord.js");
+const bot = new Discord.Client();
+
+bot.login(process.env.BOT_TOKEN);
+
+bot.once("ready", () => {
+	console.log("Bot logged in");
+});
 
 //User homepage
 router.get("/", (req, res, next) => {
@@ -69,7 +76,7 @@ router.get("/verify/:token", async (req, res, next) => {
 					});
 				}
 				if (req.user) req.user.umassVerified = true;
-				return res.render("verified");
+				return res.redirect("/u/assign-role");
 			}
 		);
 	} else {
@@ -204,5 +211,28 @@ router.post("/admin/remove-admin", async (req, res, next) => {
 		res.redirect("/");
 	}
 });
+
+router.get("/assign-role", async (req, res, next) => {
+	if (req.user) {
+		await addVerifiedRole(req.user.discordId);
+		res.render("message", {
+			title: `Yay, you are now verified`,
+			message: `You have been given the Verified ✔ role.`,
+			revertLink: {
+				url: "/u",
+				message: "Go back to home page",
+			},
+		});
+	} else {
+		res.redirect("/");
+	}
+});
+
+async function addVerifiedRole(discordId) {
+	var guild = await bot.guilds.cache.get(process.env.GUILD_ID);
+	var user = await bot.users.cache.get(discordId);
+	var member = await guild.member(user);
+	return member.roles.add("760132141048135711");
+}
 
 module.exports = router;
