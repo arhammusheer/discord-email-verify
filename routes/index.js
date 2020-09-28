@@ -13,37 +13,19 @@ router.get("/", (req, res, next) => {
 router.get("/logout", (req, res, next) => {
 	if (req.user) {
 		req.logout();
-  }
-  return res.redirect("/");
+	}
+	return res.redirect("/");
 });
 
-router.get(
-	"/auth/discord", 
-	passport.authenticate("discord")
-);
+router.get("/auth/discord", passport.authenticate("discord"));
 
 router.get(
-    "/auth/discord/callback",
-    passport.authenticate("discord", {
-        failureRedirect: "/",
-    }),
-    function(req, res) {
-        res.redirect("/auth/google"); // Successful auth from Discord
-    }
-);
-
-router.get(
-    '/auth/google',
-    passport.authenticate('google')
-);
-
-router.get(
-	'/auth/google/callback',
-	passport.authenticate('google', {
-		failureRedirect: '/',
+	"/auth/discord/callback",
+	passport.authenticate("discord", {
+		failureRedirect: "/",
 	}),
-	function(req, res) {
-		res.redirect("/u"); // Successful auth
+	function (req, res) {
+		res.redirect("/u"); // Successful auth from Discord
 	}
 );
 

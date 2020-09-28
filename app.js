@@ -72,25 +72,6 @@ passport.use(
     )
 );
 
-// Google OAuth configuration
-passport.use(
-    new GoogleStrategy(
-		{
-            clientID: process.env.GOOGLE_CLIENT_ID,
-            clientSecret: process.env.GOOGLE_CLIENT_SECRET,
-			callbackURL: "/auth/google/callback",
-			scope: ['https://www.googleapis.com/auth/userinfo.email'] 
-        },
-        function(accessToken, refreshToken, profile, cb) {
-            User.useFindAndModify({
-                umassEmail: profile.email,
-			}, 
-			function(err, user) {
-                return cb(err, user);
-            });
-        }
-));
-
 passport.serializeUser(function(user, cb) {
     cb(null, user);
 });
