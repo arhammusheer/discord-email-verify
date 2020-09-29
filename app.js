@@ -113,13 +113,22 @@ app.use("/u", usersRouter);
 
 // catch 404 and forward to error handler
 app.use(function (req, res, next) {
-	console.log(`${req.ip} - ERROR 404`);
+	console.log(`${req.ip} - ERROR 404 ${req.originalUrl}`);
+	if (req.user)
+		console.log(
+			`${req.user.username}#${req.user.discriminator} - ERROR 404 ${req.originalUrl}`
+		);
 	next(createError(404));
 });
 
 // error handler
 app.use(function (err, req, res, next) {
 	// set locals, only providing error in development
+	console.log(`${req.ip} - ERROR 404 ${req.originalUrl}`);
+	if (req.user)
+		console.log(
+			`${req.user.username}#${req.user.discriminator} - ERROR 404 ${req.originalUrl}`
+		);
 	res.locals.message = err.message;
 	res.locals.error = req.app.get("env") === "development" ? err : {};
 
