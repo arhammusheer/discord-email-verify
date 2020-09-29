@@ -67,9 +67,17 @@ router.get("/send-email", (req, res, next) => {
 		console.log(
 			`${req.user.username}#${req.user.discriminator} - /u/sent-email`
 		);
-		token = jwt.sign({ userid: req.user._id }, process.env.JWT_SECRET, {
-			expiresIn: "1h",
-		});
+		token = jwt.sign(
+			{
+				userid: req.user._id,
+				discriminator: req.user.discriminator,
+				discordId: req.user.discordId,
+			},
+			process.env.JWT_SECRET,
+			{
+				expiresIn: "1h",
+			}
+		);
 		mailer(
 			req.user.umassEmail,
 			`${req.get("host")}/u/verify/${token}`,
