@@ -4,6 +4,7 @@ var passport = require("passport");
 
 /* GET home page. */
 router.get("/", (req, res, next) => {
+	console.log(`${req.ip} - /`);
 	if (req.user) {
 		return res.redirect("/u");
 	}
@@ -11,6 +12,7 @@ router.get("/", (req, res, next) => {
 });
 
 router.get("/logout", (req, res, next) => {
+	console.log(`${req.ip} - /logout`);
 	if (req.user) {
 		req.logout();
 	}
@@ -25,6 +27,7 @@ router.get(
 		failureRedirect: "/",
 	}),
 	function (req, res) {
+		console.log(`${req.ip} - /auth/discord/callback`)
 		res.redirect("/u"); // Successful auth from Discord
 	}
 );

@@ -308,7 +308,7 @@ sendEmail = async function (receiver, token, user) {
     `, // html body
 	});
 
-	console.log("Message sent: %s", info.messageId);
+	console.log(`Email sent: ${info}`);
 };
 
 module.exports = sendEmail;

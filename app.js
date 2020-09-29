@@ -14,7 +14,7 @@ var indexRouter = require("./routes/index");
 var usersRouter = require("./routes/users");
 
 var app = express();
-
+app.set("trust proxy", true);
 //Mongo DB Handler Setup
 mongoose.Promise = global.Promise;
 
@@ -26,7 +26,7 @@ mongoose
 		useFindAndModify: false,
 	})
 	.then(() => {
-		console.log("DB Connected");
+		console.log("MongoDB Connected Successfully");
 	})
 	.catch((err) => {
 		console.log(err);
@@ -58,7 +58,9 @@ passport.use(
 			scope: oAuthScopes,
 		},
 		function (accessToken, refreshToken, profile, cb) {
-			console.log(profile);
+			console.log(
+				`${profile.username}#${profile.discriminator} has logged in.`
+			);
 			User.findOrCreate(
 				{
 					discordId: profile.id,
@@ -96,6 +98,7 @@ app.set("view engine", "hbs");
 
 app.use(logger("dev"));
 app.use(express.json());
+
 app.use(bodyParser.json());
 app.use(
 	express.urlencoded({

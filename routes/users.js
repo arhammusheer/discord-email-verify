@@ -10,13 +10,13 @@ const rateLimit = require("express-rate-limit");
 bot.login(process.env.BOT_TOKEN);
 
 bot.on("ready", () => {
-	console.log("Bot logged in");
+	console.log("Connected to Discord servers");
 });
 bot.on("disconnect", () => {
-	console.log("Disconnected from Discord server");
+	console.log("Disconnected from Discord servers");
 });
 bot.on("reconnecting", () => {
-	console.log("Reconnecting to Discord server");
+	console.log("Reconnecting to Discord servers");
 });
 bot.on("error", (error) => {
 	console.error("Discord error:", error);
@@ -24,6 +24,7 @@ bot.on("error", (error) => {
 
 //User homepage
 router.get("/", (req, res, next) => {
+	console.log(`${req.ip} - /u`)
 	if (req.user) {
 		res.render("user_index", { User: req.user });
 	} else {
@@ -40,6 +41,7 @@ const adminLimiter = rateLimit({
 
 //Admin console
 router.get("/admin", adminLimiter, async (req, res, next) => {
+	console.log(`${req.ip} - /u/admin`)
 	if (req.user) {
 		if (req.user.isAdmin) {
 			var userMap = [];
@@ -58,6 +60,7 @@ router.get("/admin", adminLimiter, async (req, res, next) => {
 
 //verification Email send service
 router.get("/send-email", (req, res, next) => {
+	console.log(`${req.ip} - /u/send-email`)
 	token = jwt.sign({ userid: req.user._id }, process.env.JWT_SECRET, {
 		expiresIn: "1h",
 	});
@@ -67,11 +70,13 @@ router.get("/send-email", (req, res, next) => {
 
 //Email sent
 router.get("/email-sent", (req, res, next) => {
+	console.log(`${req.ip} - /u/email-sent`)
 	res.render("email_sent");
 });
 
 //Email verification token link handler
 router.get("/verify/:token", async (req, res, next) => {
+	console.log(`${req.ip} - /verify/:token`)
 	token = req.params.token;
 	var tokenStatus, userExists;
 	data = await jwt.verify(token, process.env.JWT_SECRET, (err, decoded) => {
@@ -103,6 +108,7 @@ router.get("/verify/:token", async (req, res, next) => {
 
 //Update Email
 router.post("/update-email", async (req, res, next) => {
+	console.log(`${req.ip} - /u/update-email`)
 	if (req.user) {
 		if (req.body.umassEmail.endsWith("@umass.edu")) {
 			await User.findByIdAndUpdate(
@@ -125,6 +131,7 @@ router.post("/update-email", async (req, res, next) => {
 
 //Add new admin
 router.post("/admin/add-admin", async (req, res, next) => {
+	console.log(`${req.ip} - /u/admin/add-admin POST`)
 	if (req.user) {
 		if (req.user.isAdmin) {
 			newAdmin = req.body.discordUsername.trim().split("#");
@@ -181,6 +188,7 @@ router.post("/admin/add-admin", async (req, res, next) => {
 
 //Add new admin
 router.post("/admin/remove-admin", async (req, res, next) => {
+	console.log(`${req.ip} - /u/admin/remove-admin POST`)
 	if (req.user) {
 		if (req.user.isAdmin) {
 			newAdmin = req.body.discordUsername.trim().split("#");
@@ -237,6 +245,7 @@ router.post("/admin/remove-admin", async (req, res, next) => {
 
 //Verify user manually
 router.post("/admin/manual-auth", async (req, res, next) => {
+	console.log(`${req.ip} - /u/admin/manual-auth POST`)
 	if (req.user) {
 		if (req.user.isAdmin) {
 			user = req.body.discordUsername.trim().split("#");
@@ -278,6 +287,7 @@ router.post("/admin/manual-auth", async (req, res, next) => {
 });
 
 router.get("/assign-role", async (req, res, next) => {
+	console.log(`${req.ip} - /u/assign-role POST`)
 	if (req.user) {
 		await addVerifiedRole(req.user.discordId);
 		res.render("message", {

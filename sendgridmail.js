@@ -208,7 +208,7 @@ sendEmail = async function (receiver, token, user) {
 	sgMail
 		.send(msg)
 		.then(() => {
-			console.log("Email sent");
+			console.log(`Verification Email sent to ${receiver}`);
 		})
 		.catch((error) => {
 			console.error(error);
