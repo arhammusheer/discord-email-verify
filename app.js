@@ -8,6 +8,7 @@ var passport = require("passport");
 var DiscordStrategy = require("passport-discord").Strategy;
 var mongoose = require("mongoose");
 var bodyParser = require("body-parser");
+const rateLimit = require("express-rate-limit");
 
 var indexRouter = require("./routes/index");
 var usersRouter = require("./routes/users");
@@ -79,6 +80,15 @@ passport.serializeUser(function (user, cb) {
 passport.deserializeUser(function (obj, cb) {
 	cb(null, obj);
 });
+
+//Rate limiter setup
+const limiter = rateLimit({
+	windowMs: 5 * 60 * 1000, // 5 minutes
+	max: 40, // limit each IP to 100 requests per windowMs
+	message:
+		"Our system has detected that you are making too many requests to the server. We are currently limiting the requests due to too much traffic. Please try again in 5 minutes.",
+});
+app.use(limiter);
 
 // view engine setup
 app.set("views", path.join(__dirname, "views"));

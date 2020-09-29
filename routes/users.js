@@ -5,6 +5,7 @@ var mailer = require("../sendgridmail");
 const jwt = require("jsonwebtoken");
 const Discord = require("discord.js");
 const bot = new Discord.Client({ autoReconnect: true });
+const rateLimit = require("express-rate-limit");
 
 bot.login(process.env.BOT_TOKEN);
 
@@ -30,8 +31,15 @@ router.get("/", (req, res, next) => {
 	}
 });
 
+//Admin limiter exception
+const adminLimiter = rateLimit({
+	windowMs: 2 * 60 * 1000, //Every 2 minutes
+	max: 50, // 50 Requests allowed
+	message: `The system has detected too many requests from your IP. You have received a cooldown of 2 minutes. Please try again later.`,
+});
+
 //Admin console
-router.get("/admin", async (req, res, next) => {
+router.get("/admin",adminLimiter, async (req, res, next) => {
 	if (req.user) {
 		if (req.user.isAdmin) {
 			var userMap = [];
