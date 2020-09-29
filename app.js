@@ -131,7 +131,7 @@ app.use(function (err, req, res, next) {
 		console.log(
 			`${req.user.username}#${req.user.discriminator} - ERROR 404 ${req.originalUrl}`
 		);
-	if (IP_blacklist.contains(req.ip)) {
+	if (IP_blacklist.includes(req.ip)) {
 		console.log('%c Suspect has been Rickroll\'d', 'background: #222; color: #bada55');
 		return res.redirect("https://www.youtube.com/watch?v=oHg5SJYRHA0");
 	}
