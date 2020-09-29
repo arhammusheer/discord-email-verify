@@ -33,13 +33,13 @@ router.get("/", (req, res, next) => {
 
 //Admin limiter exception
 const adminLimiter = rateLimit({
-	windowMs: 2 * 60 * 1000, //Every 2 minutes
-	max: 50, // 50 Requests allowed
+	windowMs: 30 * 1000, //Every 2 minutes
+	max: 20, // 50 Requests allowed
 	message: `The system has detected too many requests from your IP. You have received a cooldown of 2 minutes. Please try again later.`,
 });
 
 //Admin console
-router.get("/admin",adminLimiter, async (req, res, next) => {
+router.get("/admin", adminLimiter, async (req, res, next) => {
 	if (req.user) {
 		if (req.user.isAdmin) {
 			var userMap = [];
