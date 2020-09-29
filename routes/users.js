@@ -65,8 +65,13 @@ router.get("/email-sent", (req, res, next) => {
 //Email verification token link handler
 router.get("/verify/:token", async (req, res, next) => {
 	token = req.params.token;
-	data = await jwt.verify(token, process.env.JWT_SECRET);
-	userExists = await User.exists({ _id: data.userid });
+	var tokenStatus, userExists;
+	data = await jwt.verify(token, process.env.JWT_SECRET, (err, decoded) => {
+		if (err) return (tokenStatus = false);
+		tokenStatus = true;
+		return decoded;
+	});
+	if (tokenStatus) userExists = await User.exists({ _id: data.userid });
 	console.log(data);
 	if (userExists) {
 		await User.findByIdAndUpdate(
@@ -123,6 +128,7 @@ router.post("/admin/add-admin", async (req, res, next) => {
 			) {
 				return res.render("message", {
 					title: `You cannot add yourself twice to admins`,
+					color: `warning`,
 					message: `YOU ARE ALREADY AN ADMIN....there's not anything above this.`,
 					revertLink: {
 						url: "/u/admin",
@@ -140,6 +146,7 @@ router.post("/admin/add-admin", async (req, res, next) => {
 					if (!err)
 						res.render("message", {
 							title: `${username}#${discriminator} is now an admin`,
+							color: `success`,
 							message: `${username}#${discriminator} has now been added to admins and has access to admin console`,
 							revertLink: {
 								url: "/u/admin",
@@ -151,6 +158,7 @@ router.post("/admin/add-admin", async (req, res, next) => {
 		} else {
 			res.render("message", {
 				title: `You do not have access permissions to do that.`,
+				color: `warning`,
 				message: `Sorry but you do not have permissions to do that. Make sure you are an admin.`,
 				revertLink: {
 					url: "/u",
@@ -176,6 +184,7 @@ router.post("/admin/remove-admin", async (req, res, next) => {
 			) {
 				return res.render("message", {
 					title: `You cannot remove your own admin`,
+					color: `danger`,
 					message: `Bruh.....Why you wanna remove your own admin. Can't do that.`,
 					revertLink: {
 						url: "/u/admin",
@@ -193,6 +202,7 @@ router.post("/admin/remove-admin", async (req, res, next) => {
 					if (!err)
 						res.render("message", {
 							title: `${username}#${discriminator} has been removed from admin`,
+							color: `primary`,
 							message: `${username}#${discriminator} has now been removed from admins.`,
 							revertLink: {
 								url: "/u/admin",
@@ -204,6 +214,7 @@ router.post("/admin/remove-admin", async (req, res, next) => {
 		} else {
 			res.render("message", {
 				title: `You do not have access permissions to do that.`,
+				color: `warning`,
 				message: `Sorry but you do not have permissions to do that. Make sure you are an admin.`,
 				revertLink: {
 					url: "/u",
@@ -232,6 +243,7 @@ router.post("/admin/manual-auth", async (req, res, next) => {
 						await addVerifiedRole(user.discordId);
 						res.render("message", {
 							title: `${user.username}#${user.discriminator} has been approved`,
+							color: `success`,
 							message: `${user.username}#${user.discriminator} has now been removed from admins.`,
 							revertLink: {
 								url: "/u/admin",
@@ -244,6 +256,7 @@ router.post("/admin/manual-auth", async (req, res, next) => {
 		} else {
 			res.render("message", {
 				title: `You do not have access permissions to do that.`,
+				color: `warning`,
 				message: `Sorry but you do not have permissions to do that. Make sure you are an admin.`,
 				revertLink: {
 					url: "/u",
@@ -261,6 +274,7 @@ router.get("/assign-role", async (req, res, next) => {
 		await addVerifiedRole(req.user.discordId);
 		res.render("message", {
 			title: `Yay, you are now verified`,
+			color: `success`,
 			message: `You have been given the Verified ✔ role.`,
 			revertLink: {
 				url: "/u",
