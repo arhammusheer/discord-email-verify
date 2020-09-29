@@ -113,6 +113,7 @@ router.get("/verify/:token", async (req, res, next) => {
 			{ umassVerified: true },
 			function (err, user) {
 				if (err) {
+					res.status(401);
 					return res.render("error", {
 						message: "401, Unauthorized Access",
 						error: { status: "You are not authorized to access this page." },
@@ -157,7 +158,9 @@ router.post("/update-email", async (req, res, next) => {
 router.post("/admin/add-admin", async (req, res, next) => {
 	console.log(`${req.ip} - /u/admin/add-admin POST`);
 	if (req.user) {
-		console.log(`${req.user.username}#${req.user.discriminator} - /u/add-admin POST`);
+		console.log(
+			`${req.user.username}#${req.user.discriminator} - /u/add-admin POST`
+		);
 		if (req.user.isAdmin) {
 			newAdmin = req.body.discordUsername.trim().split("#");
 			username = newAdmin[0];
@@ -215,7 +218,9 @@ router.post("/admin/add-admin", async (req, res, next) => {
 router.post("/admin/remove-admin", async (req, res, next) => {
 	console.log(`${req.ip} - /u/admin/remove-admin POST`);
 	if (req.user) {
-		console.log(`${req.user.username}#${req.user.discriminator} - /u/remove-admin POST`);
+		console.log(
+			`${req.user.username}#${req.user.discriminator} - /u/remove-admin POST`
+		);
 		if (req.user.isAdmin) {
 			newAdmin = req.body.discordUsername.trim().split("#");
 			username = newAdmin[0];
@@ -273,7 +278,9 @@ router.post("/admin/remove-admin", async (req, res, next) => {
 router.post("/admin/manual-auth", async (req, res, next) => {
 	console.log(`${req.ip} - /u/admin/manual-auth POST`);
 	if (req.user) {
-		console.log(`${req.user.username}#${req.user.discriminator} - /u/manual-auth POST`);
+		console.log(
+			`${req.user.username}#${req.user.discriminator} - /u/manual-auth POST`
+		);
 		if (req.user.isAdmin) {
 			user = req.body.discordUsername.trim().split("#");
 			await User.findOneAndUpdate(
@@ -316,7 +323,9 @@ router.post("/admin/manual-auth", async (req, res, next) => {
 router.get("/assign-role", async (req, res, next) => {
 	console.log(`${req.ip} - /u/assign-role POST`);
 	if (req.user) {
-		console.log(`${req.user.username}#${req.user.discriminator} - /u/assign-role`);
+		console.log(
+			`${req.user.username}#${req.user.discriminator} - /u/assign-role`
+		);
 		await addVerifiedRole(req.user.discordId);
 		res.render("message", {
 			title: `Yay, you are now verified`,
