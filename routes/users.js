@@ -33,8 +33,8 @@ router.get("/", (req, res, next) => {
 
 //Admin limiter exception
 const adminLimiter = rateLimit({
-	windowMs: 30 * 1000, //Every 2 minutes
-	max: 20, // 50 Requests allowed
+	windowMs: 2 * 60 * 1000, //Every 2 minutes
+	max: 200, // 50 Requests allowed
 	message: `The system has detected too many requests from your IP. Please try again in a few moments.`,
 });
 
