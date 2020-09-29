@@ -86,7 +86,7 @@ const limiter = rateLimit({
 	windowMs: 30 * 1000, // 5 minutes
 	max: 7, // limit each IP to 100 requests per windowMs
 	message:
-		"Our system has detected that you are making too many requests to the server. We are currently limiting the requests due to too much traffic. Please try again in 5 minutes.",
+		"Our system has detected that you are making too many requests to the server. We are currently limiting the requests due to too much traffic. Please try again in a minute.",
 });
 app.use(limiter);
 
