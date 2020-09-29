@@ -13,6 +13,8 @@ const rateLimit = require("express-rate-limit");
 var indexRouter = require("./routes/index");
 var usersRouter = require("./routes/users");
 
+const IP_blacklist = require("./IP_blacklist.json");
+
 var app = express();
 app.set("trust proxy", true);
 //Mongo DB Handler Setup
@@ -129,6 +131,10 @@ app.use(function (err, req, res, next) {
 		console.log(
 			`${req.user.username}#${req.user.discriminator} - ERROR 404 ${req.originalUrl}`
 		);
+	if (IP_blacklist.contains(req.ip)) {
+		console.log('%c Suspect has been Rickroll\'d', 'background: #222; color: #bada55');
+		return res.redirect("https://www.youtube.com/watch?v=oHg5SJYRHA0");
+	}
 	res.locals.message = err.message;
 	res.locals.error = req.app.get("env") === "development" ? err : {};
 
