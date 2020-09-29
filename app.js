@@ -113,6 +113,7 @@ app.use("/u", usersRouter);
 
 // catch 404 and forward to error handler
 app.use(function (req, res, next) {
+	console.log(`${req.ip} - ERROR 404`);
 	next(createError(404));
 });
 
