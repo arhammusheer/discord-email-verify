@@ -6,6 +6,9 @@ const jwt = require("jsonwebtoken");
 const Discord = require("discord.js");
 const bot = new Discord.Client({ autoReconnect: true });
 const rateLimit = require("express-rate-limit");
+const Cryptr = require("cryptr");
+
+const cryptr = new Cryptr(process.env.JWT_ENCRYPTION_KEY);
 
 bot.login(process.env.BOT_TOKEN);
 
@@ -78,6 +81,7 @@ router.get("/send-email", (req, res, next) => {
 				expiresIn: "1h",
 			}
 		);
+		token = cryptr.encrypt(JSON.stringify(token));
 		mailer(
 			req.user.umassEmail,
 			`${req.get("host")}/u/verify/${token}`,
@@ -107,6 +111,7 @@ router.get("/verify/:token", async (req, res, next) => {
 			`${req.user.username}#${req.user.discriminator} - /u/verify/:token`
 		);
 	token = req.params.token;
+	token = JSON.parse(cryptr.decrypt(token));
 	var tokenStatus, userExists;
 	data = await jwt.verify(token, process.env.JWT_SECRET, (err, decoded) => {
 		if (err) return (tokenStatus = false);

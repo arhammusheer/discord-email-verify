@@ -8,6 +8,7 @@
   "dependencies": {
     "@sendgrid/mail": "^7.2.6",
     "cookie-parser": "^1.4.5",
+    "cryptr": "^6.0.2",
     "debug": "^4.2.0",
     "discord.js": "^12.3.1",
     "dotenv": "^8.2.0",
