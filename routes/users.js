@@ -71,7 +71,7 @@ router.get("/send-email", (req, res, next) => {
 		console.log(
 			`${req.user.username}#${req.user.discriminator} - /u/sent-email`
 		);
-		token = jwt.sign(
+		var token = jwt.sign(
 			{
 				userid: req.user._id,
 				discriminator: req.user.discriminator,
