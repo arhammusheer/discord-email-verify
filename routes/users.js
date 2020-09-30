@@ -133,6 +133,18 @@ router.get("/verify/:token", async (req, res, next) => {
 					});
 				}
 				if (req.user) req.user.umassVerified = true;
+				if (req.user) {
+					addVerifiedRole(req.user.discordId);
+					return res.render("message", {
+						title: `Yay, you are now verified`,
+						color: `success`,
+						message: `You have been given the Verified ✔ role.`,
+						revertLink: {
+							url: "/u",
+							message: "Go back to home page",
+						},
+					});
+				}
 				return res.redirect("/u/assign-role");
 			}
 		);
