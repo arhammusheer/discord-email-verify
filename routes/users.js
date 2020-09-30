@@ -7,7 +7,6 @@ const Discord = require("discord.js");
 const bot = new Discord.Client({ autoReconnect: true });
 const rateLimit = require("express-rate-limit");
 const Cryptr = require("cryptr");
-const { token } = require("morgan");
 
 const cryptr = new Cryptr(process.env.JWT_ENCRYPTION_KEY);
 
