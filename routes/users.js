@@ -303,7 +303,7 @@ router.post("/admin/manual-auth", async (req, res, next) => {
 						res.render("message", {
 							title: `${user.username}#${user.discriminator} has been approved`,
 							color: `success`,
-							message: `${user.username}#${user.discriminator} has now been removed from admins.`,
+							message: `${user.username}#${user.discriminator} has now been given the ✔ verified role manually.`,
 							revertLink: {
 								url: "/u/admin",
 								message: "Go back to admin page",
@@ -334,26 +334,43 @@ router.get("/assign-role", async (req, res, next) => {
 		console.log(
 			`${req.user.username}#${req.user.discriminator} - /u/assign-role`
 		);
-		await addVerifiedRole(req.user.discordId);
-		res.render("message", {
-			title: `Yay, you are now verified`,
-			color: `success`,
-			message: `You have been given the Verified ✔ role.`,
-			revertLink: {
-				url: "/u",
-				message: "Go back to home page",
-			},
-		});
+		roleAdded = await addVerifiedRole(req.user.discordId);
+		if (roleAdded) {
+			res.render("message", {
+				title: `Yay, you are now verified`,
+				color: `success`,
+				message: `You have been given the Verified ✔ role.`,
+				revertLink: {
+					url: "/u",
+					message: "Go back to home page",
+				},
+			});
+		} else {
+			res.render("message", {
+				title: `Unable to find member`,
+				color: `warning`,
+				message: `The user you have mentioned has not joined <div class="text-primary">UMass Amherst Public Discord.</div>`,
+				revertLink: {
+					url: "/u",
+					message: `Go back to home page`,
+				},
+			});
+		}
 	} else {
 		res.redirect("/");
 	}
 });
 
 async function addVerifiedRole(discordId) {
-	var guild = await bot.guilds.cache.get(process.env.GUILD_ID);
-	var user = await bot.users.cache.get(discordId);
-	var member = await guild.member(user);
-	return member.roles.add("760132141048135711");
+	var guild = bot.guilds.cache.get(process.env.GUILD_ID);
+	var user = bot.users.cache.get(discordId);
+	var member = guild.member(user);
+	if (guild.member(user)) {
+		member.roles.add("760132141048135711");
+		return true;
+	} else {
+		return false;
+	}
 }
 
 module.exports = router;
