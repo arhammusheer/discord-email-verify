@@ -7,6 +7,7 @@ const Discord = require("discord.js");
 const bot = new Discord.Client({ autoReconnect: true });
 const rateLimit = require("express-rate-limit");
 const Cryptr = require("cryptr");
+const { token } = require("morgan");
 
 const cryptr = new Cryptr(process.env.JWT_ENCRYPTION_KEY);
 
@@ -110,8 +111,25 @@ router.get("/verify/:token", async (req, res, next) => {
 		console.log(
 			`${req.user.username}#${req.user.discriminator} - /u/verify/:token`
 		);
-	token = req.params.token;
-	token = JSON.parse(cryptr.decrypt(token));
+	var token;
+	try {
+		token = cryptr.decrypt(req.params.token);
+	} catch (err) {
+		console.error(`Could not decrypt the email token received. Invalid link.`);
+		token = false;
+	}
+	if (token == false) {
+		return res.render("message", {
+			title: `Invalid Link`,
+			color: `danger`,
+			message: `We could not decrypt the link you used. Please make sure it is not expired as our links expire every 60 minutes.`,
+			revertLink: {
+				url: "/",
+				message: "Go back to home page",
+			},
+		});
+	}
+	token = JSON.parse(token);
 	var tokenStatus, userExists;
 	data = await jwt.verify(token, process.env.JWT_SECRET, (err, decoded) => {
 		if (err) return (tokenStatus = false);
